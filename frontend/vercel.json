@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "https://backend-541827375215.europe-west3.run.app/$1"
+      }
+    ]
+  }
+  
