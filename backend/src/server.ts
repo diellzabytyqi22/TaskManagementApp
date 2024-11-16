@@ -6,8 +6,25 @@ import cors from 'cors';
 const app = express();
 const prisma = new PrismaClient();
 
+// Enable CORS for localhost (during development) and Vercel domain (production)
+const allowedOrigins = [
+  'http://localhost:5173', // localhost during development
+  'https://task-management-app-two-jet.vercel.app', // Vercel domain in production
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('CORS not allowed'));
+      }
+    },
+  })
+);
+
 app.use(express.json());
-app.use(cors()); // Enable CORS for all routes
 
 // Middleware to handle validation errors
 const handleValidationErrors = (

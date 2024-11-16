@@ -51,23 +51,18 @@ const TaskBoard: React.FC = () => {
 
   // Handle drag and drop event
   const handleDragEnd = async (result: DropResult) => {
-    // Destructure `destination` and `source` from the result of the drag event
     const { destination, source } = result;
 
-    // Check if there's no destination or if the task was dropped back in its original position
     if (!destination || destination.droppableId === source.droppableId) return;
 
-    // Find the task being moved using its ID from the draggable element
     const movedTask = tasks.find((task) => task.id === parseInt(result.draggableId));
-    if (!movedTask) return; // If the task is not found, do nothing
+    if (!movedTask) return;
 
-    // Create a new array with the updated status of the moved task
     const updatedTasks = tasks.map((task) =>
       task.id === movedTask.id ? { ...task, status: destination.droppableId as Task['status'] } : task
     );
-    setTasks(updatedTasks); // Update the state to reflect the new status
+    setTasks(updatedTasks);
 
-    // Update the task status in the backend to persist the change
     try {
       await axios.put(`http://localhost:3000/tasks/${movedTask.id}`, {
         status: destination.droppableId,
@@ -77,14 +72,13 @@ const TaskBoard: React.FC = () => {
     }
   };
 
-  // Reusable Column component
   const Column: React.FC<{ status: string; tasks: Task[] }> = ({ status, tasks }) => (
     <Droppable droppableId={status}>
       {(provided) => (
         <div
           className={`column ${status.toLowerCase().replace('_', '-')}`}
-          ref={provided.innerRef} // Set the droppable container reference
-          {...provided.droppableProps} // Spread droppable props for correct functionality
+          ref={provided.innerRef}
+          {...provided.droppableProps}
         >
           <h2>{status.replace('_', ' ')}</h2>
           {tasks
@@ -93,16 +87,16 @@ const TaskBoard: React.FC = () => {
               <Draggable key={task.id} draggableId={String(task.id)} index={index}>
                 {(provided) => (
                   <div
-                    ref={provided.innerRef} // Set the draggable item reference
-                    {...provided.draggableProps} // Spread draggable props for proper dragging
-                    {...provided.dragHandleProps} // Spread drag handle props for handling drag interaction
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
                   >
                     <TaskCard task={task} fetchTasks={fetchTasks} />
                   </div>
                 )}
               </Draggable>
             ))}
-          {provided.placeholder} {/* Placeholder to maintain space while dragging */}
+          {provided.placeholder}
         </div>
       )}
     </Droppable>
@@ -130,10 +124,8 @@ const TaskBoard: React.FC = () => {
         </form>
       </div>
 
-      {/* Wrap the board in DragDropContext to enable drag-and-drop */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="task-board">
-          {/* Render columns for each status */}
           {['TODO', 'IN_PROGRESS', 'DONE'].map((status) => (
             <Column key={status} status={status} tasks={tasks} />
           ))}
