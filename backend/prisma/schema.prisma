@@ -1,0 +1,32 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model Task {
+  id          Int         @id @default(autoincrement())
+  title       String
+  completed   Boolean     @default(false)
+  description String
+  status      TaskStatus  @default(TODO)
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  surname   String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
