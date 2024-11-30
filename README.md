@@ -18,7 +18,7 @@ is built using Express.
 - *Create, Edit, and Delete Tasks*: CRUD functionality for managing tasks.
 - *Drag-and-Drop Interface*: Organize tasks across columns using drag-and-drop.
 - *Task Status*: Track the progress of tasks (TODO, I…
-[11:30, 18/11/2024] Diellza Bytyqi: # Task Management App
+# Task Management App
 
 This is a full-stack Task Management App built with *React, **TypeScript, **Vite, **Node.js, **Express.js, and **Prisma ORM*. The application allows users to manage tasks with CRUD operations (Create, Read, Update, Delete) and provides drag-and-drop functionality to organize tasks across different columns.
 

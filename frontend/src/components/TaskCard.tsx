@@ -3,42 +3,55 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
+// Interface for Task object, describing its structure
 interface Task {
-  id: number;
-  title: string;
-  description: string;
-  status: string;
+  id: number; // Unique identifier for the task
+  title: string; // Title of the task
+  description: string; // Description of the task
+  status: string; // Current status of the task (e.g., TODO, IN_PROGRESS, DONE)
 }
 
+// Props for TaskCard component
 interface TaskCardProps {
-  task: Task;
-  fetchTasks: () => void;
+  task: Task; // The task data to display and manage
+  fetchTasks: () => void; // Callback function to refresh the task list
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, fetchTasks }) => {
+  // Local state to manage editing mode
   const [isEditing, setIsEditing] = useState(false);
-  const [newTitle, setNewTitle] = useState(task.title);
-  const [newDescription, setNewDescription] = useState(task.description);
+  const [newTitle, setNewTitle] = useState(task.title); // Local state for task title when editing
+  const [newDescription, setNewDescription] = useState(task.description); // Local state for task description when editing
 
+  // Function to handle task deletion
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:3000/tasks/${task.id}`);
-      fetchTasks();
+      await axios.delete(`http://localhost:3000/tasks/${task.id}`); 
+      // Sends a DELETE request to remove the task from the backend
+      fetchTasks(); 
+      // Refreshes the task list after successful deletion
     } catch (error) {
-      console.error('Error deleting task:', error);
+      console.error('Error deleting task:', error); 
+      // Logs an error message if the delete request fails
     }
   };
 
+  // Function to handle task editing
   const handleEdit = async () => {
     try {
       await axios.put(`http://localhost:3000/tasks/${task.id}`, {
-        title: newTitle,
-        description: newDescription,
+        title: newTitle, 
+        // Sends the updated title to the backend
+        description: newDescription, 
+        // Sends the updated description to the backend
       });
-      setIsEditing(false);
-      fetchTasks();
+      setIsEditing(false); 
+      // Exits editing mode upon successful update
+      fetchTasks(); 
+      // Refreshes the task list to reflect changes
     } catch (error) {
-      console.error('Error updating task:', error);
+      console.error('Error updating task:', error); 
+      // Logs an error message if the update request fails
     }
   };
 
@@ -46,35 +59,51 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, fetchTasks }) => {
     <div className="task-card">
       {isEditing ? (
         <>
+          {/* Editing mode - displays input fields to edit the task */}
           <input
             type="text"
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            className="w-full mb-2 p-1 border rounded"
+            value={newTitle} 
+            // Displays and binds the title to local state
+            onChange={(e) => setNewTitle(e.target.value)} 
+            // Updates the title state on user input
+            className="w-full mb-2 p-1 border rounded" 
+            // Styling for input
           />
           <textarea
-            value={newDescription}
-            onChange={(e) => setNewDescription(e.target.value)}
-            className="w-full mb-2 p-1 border rounded"
+            value={newDescription} 
+            // Displays and binds the description to local state
+            onChange={(e) => setNewDescription(e.target.value)} 
+            // Updates the description state on user input
+            className="w-full mb-2 p-1 border rounded" 
+            // Styling for textarea
           />
           <button onClick={handleEdit} className="save-btn">
-            Save
+            Save 
+            {/* Button to confirm task editing */}
           </button>
         </>
       ) : (
         <>
-          <h4 className="task-title">{task.title}</h4>
-          <p className="task-description">{task.description}</p>
+          {/* Default mode - displays task title and description */}
+          <h4 className="task-title">{task.title}</h4> 
+          {/* Task title */}
+          <p className="task-description">{task.description}</p> 
+          {/* Task description */}
           <div className="icon-container">
+            {/* Action icons for editing and deleting */}
             <FontAwesomeIcon
               icon={faEdit}
-              className="edit-icon"
-              onClick={() => setIsEditing(true)}
+              className="edit-icon" 
+              // Styling for the edit icon
+              onClick={() => setIsEditing(true)} 
+              // Toggles editing mode on click
             />
             <FontAwesomeIcon
               icon={faTrash}
-              className="delete-icon"
-              onClick={handleDelete}
+              className="delete-icon" 
+              // Styling for the delete icon
+              onClick={handleDelete} 
+              // Triggers the delete functionality
             />
           </div>
         </>
